@@ -1,10 +1,10 @@
 import boto3
 
 # Configure your AWS credentials and region
-aws_access_key_id = 'YOUR_ACCESS_KEY'
-aws_secret_access_key = 'YOUR_SECRET_KEY'
-aws_session_token = 'YOUR_SESSION_TOKEN'  # Replace with your temporary session token
-region_name = 'YOUR_REGION'
+aws_access_key_id = ''
+aws_secret_access_key = ''
+aws_session_token = ''  # Replace with your temporary session token
+region_name = 'ap-southeast-1'
 
 # Initialize the Athena client with temporary session credentials
 athena = boto3.client('athena', region_name=region_name,
@@ -13,14 +13,17 @@ athena = boto3.client('athena', region_name=region_name,
                       aws_session_token=aws_session_token)
 
 # Specify the query to run
-query = "SELECT * FROM your_database.your_table LIMIT 10"
+query = "SELECT * FROM interface_history LIMIT 10"
+
+result_configuration = {'OutputLocation': 's3://vib-km-migration-day-0-bucket/athena-result/'}  # Replace with your S3 bucket and prefix
 
 # Set up the Athena query execution context
 query_execution = athena.start_query_execution(
     QueryString=query,
     QueryExecutionContext={
-        'Database': 'your_database'  # Replace with your database name
-    }
+        'Database': 'axe_credit_inter'  # Replace with your database name
+    },
+    ResultConfiguration=result_configuration
 )
 
 # Get the query execution ID
